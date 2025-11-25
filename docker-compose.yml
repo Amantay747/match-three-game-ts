@@ -17,6 +17,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 10s
+    networks:
+      - app-network
 
   app:
     build:
@@ -39,7 +42,14 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-    command: npm start
+      - /app/dist
+    networks:
+      - app-network
+    restart: on-failure:3
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   postgres_data:
