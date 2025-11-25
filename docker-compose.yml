@@ -17,23 +17,19 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 10s
+      start_period: 15s
     networks:
       - app-network
+    command: [ "postgres", "-c", "log_statement=all" ]
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: match-three-app
+    env_file: .env.docker
     environment:
-      DB_NAME: match_three_game
-      DB_USER: postgres
-      DB_PASS: postgres
       DB_HOST: postgres
-      DB_PORT: 5432
-      NODE_ENV: development
-      PORT: 3000
     ports:
       - "3000:3000"
     depends_on:
@@ -45,7 +41,7 @@ services:
       - /app/dist
     networks:
       - app-network
-    restart: on-failure:3
+    restart: on-failure:5
 
 networks:
   app-network:
