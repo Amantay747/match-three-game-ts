@@ -1,5 +1,5 @@
 import { Table, Column, Model, DataType, HasMany, PrimaryKey, Default } from 'sequelize-typescript';
-import { Difficulty, GameStatus } from '../types/game.types';
+import { Difficulty, GameStatus } from '../types/game.type';
 import { GameMove } from './GameMove';
 
 @Table({

@@ -2,7 +2,8 @@ import {
   GameConfig, 
   Coordinate, 
   MoveResult, 
-  Direction 
+  Direction,
+  SwapRequest
 } from '../types/game.type';
 
 export class GameService {
@@ -196,8 +197,8 @@ export class GameService {
     const size = board.length;
     
     // Check if coordinates are valid
-    if (fromRow < 0  fromRow >= size  fromCol < 0  fromCol >= size 
-        toRow < 0  toRow >= size  toCol < 0 || toCol >= size) {
+    if (fromRow < 0 || fromRow >= size || fromCol < 0 || fromCol >= size || 
+        toRow < 0 || toRow >= size || toCol < 0 || toCol >= size) {
       return false;
     }
     

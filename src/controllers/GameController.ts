@@ -9,7 +9,7 @@ import {
   Difficulty,
   CustomSettings,
   GameConfig
-} from '../types/game.types';
+} from '../types/game.type';
 
 export class GameController {
   async createGame(req: Request<{}, {}, CreateGameRequest>, res: Response): Promise<void> {

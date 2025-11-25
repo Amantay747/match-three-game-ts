@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Leaderboard, Leaderboard } from "../models";
+import { Leaderboard } from "../models";
 import { Difficulty } from "../types/game.type";
 
 export class LeaderboardController {
@@ -8,18 +8,17 @@ export class LeaderboardController {
             const { difficulty } = req.query;
 
             let whereClause: any = {};
-            if (difficulty && ['easy', 'medium', 'hard', 'custom'].incliudes(difficulty as string)) {
+            if (difficulty && ['easy', 'medium', 'hard', 'custom'].includes(difficulty as string)) {
                 whereClause.difficulty = difficulty;
             }
 
-            const Leaderboard = await Leaderboard.findAll({
+            const leaderboardData = await Leaderboard.findAll({
                 where: whereClause,
-                order: [['completionTime', 'ASC'],
+                order: [['completionTime', 'ASC']],
                 limit: 10 
-                ],
             });
 
-            res.json(Leaderboard);
+            res.json(leaderboardData);
         } catch (error) {
             res.status(500).json({ error: (error as Error).message });
         }

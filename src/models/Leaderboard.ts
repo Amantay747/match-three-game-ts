@@ -1,5 +1,5 @@
 import { Table, Column, Model, DataType, PrimaryKey, Default, Index } from 'sequelize-typescript';
-import { Difficulty } from '../types/game.types';
+import { Difficulty } from '../types/game.type';
 
 @Table({
   tableName: 'leaderboards',
@@ -45,6 +45,6 @@ export class Leaderboard extends Model {
   @Index(['difficulty', 'completionTime'])
   @Column(DataType.VIRTUAL)
   get rankKey(): string {
-    return ${this.difficulty}_${this.completionTime};
+    return `${this.difficulty}_${this.completionTime}`;
   }
 }
