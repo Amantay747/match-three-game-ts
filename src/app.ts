@@ -3,7 +3,6 @@ import swaggerUi from 'swagger-ui-express';
 import swagerJsdoc from 'swagger-jsdoc';
 import { seqialize } from './config/database';
 import { gameRoutes } from './routes/game.routes';
-import { time } from 'console';
 
 const app = express();
 
@@ -23,7 +22,7 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ['./src/routes/*.ts'],
+    apis: ['./dist/routes/*.js'],
 };
 
 const swaggerSpecs = swagerJsdoc(swaggerOptions);
