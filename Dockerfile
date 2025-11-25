@@ -14,7 +14,9 @@ RUN npm install
 
 # Copy source code
 COPY src ./src
-COPY dist ./dist
+
+# Compile TypeScript
+RUN npm run build
 
 # Copy entrypoint script
 COPY entrypoint.sh ./

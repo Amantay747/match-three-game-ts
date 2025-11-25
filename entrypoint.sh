@@ -22,12 +22,6 @@ done
 echo "Giving database time to fully initialize..."
 sleep 3
 
-# Build TypeScript
-echo ""
-echo "Building TypeScript..."
-npm run build
-echo "✓ TypeScript build complete"
-
 # Start the application
 echo ""
 echo "Starting application on port ${PORT}..."
