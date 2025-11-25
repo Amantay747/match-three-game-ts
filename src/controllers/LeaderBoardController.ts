@@ -15,7 +15,7 @@ export class LeaderboardController {
             const leaderboardData = await Leaderboard.findAll({
                 where: whereClause,
                 order: [['completionTime', 'ASC']],
-                limit: 10 
+                limit: 10
             });
 
             res.json(leaderboardData);

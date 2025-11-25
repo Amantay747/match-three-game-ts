@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import { Game, Leaderboard } from '../models';
 import { gameService } from '../services/GameService';
-import { 
-  CreateGameRequest, 
-  SwapRequest, 
-  GameResponse, 
+import {
+  CreateGameRequest,
+  SwapRequest,
+  GameResponse,
   SwapResponse,
   Difficulty,
   CustomSettings,
@@ -15,9 +15,9 @@ export class GameController {
   async createGame(req: Request<{}, {}, CreateGameRequest>, res: Response): Promise<void> {
     try {
       const { difficulty = 'easy', customSettings } = req.body;
-      
+
       let gameConfig: GameConfig;
-      
+
       switch (difficulty) {
         case 'easy':
           gameConfig = {
@@ -65,7 +65,7 @@ export class GameController {
       }
 
       const board = gameService.generateBoard(gameConfig.boardSize, gameConfig.itemsCount);
-      const selectedItem = gameConfig.randomItemMode 
+      const selectedItem = gameConfig.randomItemMode
         ? gameService.getRandomItem(gameConfig.itemsCount)
         : null;
 
@@ -134,9 +134,9 @@ export class GameController {
       if (!dir) {
         res.status(400).json({ error: 'Invalid direction' });
         return;
-    }
+      }
 
-    const toRow = fromRow + dir.row;
+      const toRow = fromRow + dir.row;
       const toCol = fromCol + dir.col;
 
       if (!gameService.isValidSwap(game.boardState, fromRow, fromCol, toRow, toCol)) {
@@ -145,10 +145,10 @@ export class GameController {
       }
 
       let newBoard = gameService.swapItems(game.boardState, fromRow, fromCol, toRow, toCol);
-      
+
       const moveResult = gameService.processMove(
-        newBoard, 
-        game.itemsCount, 
+        newBoard,
+        game.itemsCount,
         game.randomItemMode ? game.selectedItem : null
       );
 
@@ -173,9 +173,9 @@ export class GameController {
       if (gameService.checkGameCompletion(game.score, game.targetScore)) {
         game.status = 'completed';
         game.endTime = new Date();
-        
+
         const completionTime = Math.floor((game.endTime.getTime() - game.startTime.getTime()) / 1000);
-        
+
         await Leaderboard.create({
           playerName: 'Anonymous',
           difficulty: game.difficulty,
@@ -220,7 +220,7 @@ export class GameController {
       }
 
       game.score = Math.max(0, game.score - 5);
-      
+
       const newBoard = gameService.generateBoard(game.boardSize, game.itemsCount);
       game.boardState = newBoard;
       game.lastActivity = new Date();

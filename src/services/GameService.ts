@@ -1,7 +1,7 @@
-import { 
-  GameConfig, 
-  Coordinate, 
-  MoveResult, 
+import {
+  GameConfig,
+  Coordinate,
+  MoveResult,
   Direction,
   SwapRequest
 } from '../types/game.type';
@@ -16,7 +16,7 @@ export class GameService {
 
   generateBoard(size: number, itemsCount: number): string[][] {
     const board: string[][] = [];
-    
+
     for (let i = 0; i < size; i++) {
       const row: string[] = [];
       for (let j = 0; j < size; j++) {
@@ -24,12 +24,12 @@ export class GameService {
       }
       board.push(row);
     }
-    
+
     // Ensure no initial matches
     while (this.hasMatches(board)) {
       return this.generateBoard(size, itemsCount);
     }
-    
+
     return board;
   }
 
@@ -53,15 +53,15 @@ export class GameService {
     // Check horizontal matches
     for (let row = 0; row < size; row++) {
       for (let col = 0; col < size - 2; col++) {
-        if (board[row][col] && 
-            board[row][col] === board[row][col + 1] && 
-            board[row][col] === board[row][col + 2]) {
-          
+        if (board[row][col] &&
+          board[row][col] === board[row][col + 1] &&
+          board[row][col] === board[row][col + 2]) {
+
           let matchLength = 3;
           while (col + matchLength < size && board[row][col] === board[row][col + matchLength]) {
             matchLength++;
           }
-          
+
           for (let i = 0; i < matchLength; i++) {
             matches.add(`${row},${col + i}`);
           }
@@ -72,15 +72,15 @@ export class GameService {
     // Check vertical matches
     for (let col = 0; col < size; col++) {
       for (let row = 0; row < size - 2; row++) {
-        if (board[row][col] && 
-            board[row][col] === board[row + 1][col] && 
-            board[row][col] === board[row + 2][col]) {
-          
+        if (board[row][col] &&
+          board[row][col] === board[row + 1][col] &&
+          board[row][col] === board[row + 2][col]) {
+
           let matchLength = 3;
           while (row + matchLength < size && board[row][col] === board[row + matchLength][col]) {
             matchLength++;
           }
-          
+
           for (let i = 0; i < matchLength; i++) {
             matches.add(`${row + i},${col}`);
           }
@@ -105,10 +105,10 @@ export class GameService {
   applyGravity(board: string[][]): string[][] {
     const size = board.length;
     const newBoard = board.map(row => [...row]);
-    
+
     for (let col = 0; col < size; col++) {
       let emptySpaces = 0;
-      
+
       // Move from bottom to top
       for (let row = size - 1; row >= 0; row--) {
         if (newBoard[row][col] === '') {
@@ -119,14 +119,14 @@ export class GameService {
         }
       }
     }
-    
+
     return newBoard;
   }
 
   fillEmptySpaces(board: string[][], itemsCount: number): string[][] {
     const size = board.length;
     const newBoard = board.map(row => [...row]);
-    
+
     for (let row = 0; row < size; row++) {
       for (let col = 0; col < size; col++) {
         if (newBoard[row][col] === '') {
@@ -134,7 +134,7 @@ export class GameService {
         }
       }
     }
-    
+
     return newBoard;
   }
 
@@ -153,12 +153,12 @@ export class GameService {
       if (matches.length === 0) break;
 
       hasMatches = true;
-      
+
       // Calculate score
-      const moveScore = randomItem 
+      const moveScore = randomItem
         ? matches.filter(match => currentBoard[match.row][match.col] === randomItem).length
         : matches.length;
-      
+
       totalScore += moveScore;
 
       // Remove matches and apply gravity
@@ -195,17 +195,17 @@ export class GameService {
 
   isValidSwap(board: string[][], fromRow: number, fromCol: number, toRow: number, toCol: number): boolean {
     const size = board.length;
-    
+
     // Check if coordinates are valid
-    if (fromRow < 0 || fromRow >= size || fromCol < 0 || fromCol >= size || 
-        toRow < 0 || toRow >= size || toCol < 0 || toCol >= size) {
+    if (fromRow < 0 || fromRow >= size || fromCol < 0 || fromCol >= size ||
+      toRow < 0 || toRow >= size || toCol < 0 || toCol >= size) {
       return false;
     }
-    
+
     // Check if swap is adjacent
     const rowDiff = Math.abs(fromRow - toRow);
     const colDiff = Math.abs(fromCol - toCol);
-    
+
     return (rowDiff === 1 && colDiff === 0) || (rowDiff === 0 && colDiff === 1);
   }
 
@@ -215,7 +215,7 @@ export class GameService {
 
   canMakeValidMove(board: string[][]): boolean {
     const size = board.length;
-    
+
     // Check all possible swaps
     for (let row = 0; row < size; row++) {
       for (let col = 0; col < size; col++) {
@@ -224,7 +224,7 @@ export class GameService {
           const swapped = this.swapItems(board, row, col, row, col + 1);
           if (this.hasMatches(swapped)) return true;
         }
-        
+
         // Check down swap
         if (row < size - 1) {
           const swapped = this.swapItems(board, row, col, row + 1, col);
@@ -232,7 +232,7 @@ export class GameService {
         }
       }
     }
-    
+
     return false;
   }
 }
