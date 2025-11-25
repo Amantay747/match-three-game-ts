@@ -27,9 +27,14 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: match-three-app
-    env_file: .env.docker
     environment:
       DB_HOST: postgres
+      DB_USER: postgres
+      DB_PASS: postgres
+      DB_NAME: match_three_game
+      DB_PORT: 5432
+      NODE_ENV: development
+      PORT: 3000
     ports:
       - "3000:3000"
     depends_on:

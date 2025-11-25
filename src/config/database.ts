@@ -1,8 +1,17 @@
 import { Sequelize } from 'sequelize-typescript';
 import { Game, Leaderboard, GameMove } from '../models';
 import dotenv from 'dotenv';
+import * as fs from 'fs';
+import * as path from 'path';
 
-dotenv.config();
+// Load environment variables - prioritize .env.docker in Docker, fallback to .env
+const envPath = fs.existsSync(path.join(process.cwd(), '.env.docker'))
+    ? path.join(process.cwd(), '.env.docker')
+    : path.join(process.cwd(), '.env');
+
+dotenv.config({ path: envPath });
+
+console.log(`Loading env file: ${envPath}`);
 
 // Support both individual env vars and DATABASE_URL (for Railway, Heroku, etc.)
 let sequelizeConfig: any;
