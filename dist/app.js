@@ -43,14 +43,14 @@ app.use((req, res) => {
     res.status(404).json({ message: 'Route Not Found' });
 });
 const PORT = process.env.PORT || 3000;
-const retryConnection = async (maxRetries = 5, delay = 2000) => {
+const retryConnection = async (maxRetries = 10, delay = 3000) => {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
             console.log(`Database connection attempt ${attempt}/${maxRetries}...`);
             await database_1.seqialize.authenticate();
-            console.log('Database connected successfully.');
+            console.log('✓ Database authenticated successfully.');
             await database_1.seqialize.sync();
-            console.log('Database synchronized.');
+            console.log('✓ Database synchronized.');
             return;
         }
         catch (error) {
@@ -58,7 +58,7 @@ const retryConnection = async (maxRetries = 5, delay = 2000) => {
                 throw error;
             }
             const waitTime = delay * attempt;
-            console.log(`Connection failed, retrying in ${waitTime}ms...`);
+            console.log(`Connection failed. Retrying in ${waitTime}ms...`);
             await new Promise(resolve => setTimeout(resolve, waitTime));
         }
     }
@@ -67,11 +67,12 @@ const startServer = async () => {
     try {
         await retryConnection();
         app.listen(PORT, () => {
-            console.log(`Server is running on http://localhost:${PORT}/api-docs`);
+            console.log(`✓ Server is running on port ${PORT}`);
+            console.log(`✓ API documentation: http://localhost:${PORT}/api-docs`);
         });
     }
     catch (error) {
-        console.error('Unable to connect to the database after retries:', error);
+        console.error('✗ Unable to connect to the database after retries:', error);
         process.exit(1);
     }
 };

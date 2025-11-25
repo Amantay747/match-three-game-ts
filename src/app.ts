@@ -48,21 +48,21 @@ app.use((req: express.Request, res: express.Response) => {
 
 const PORT = process.env.PORT || 3000;
 
-const retryConnection = async (maxRetries = 5, delay = 2000): Promise<void> => {
+const retryConnection = async (maxRetries = 10, delay = 3000): Promise<void> => {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
             console.log(`Database connection attempt ${attempt}/${maxRetries}...`);
             await seqialize.authenticate();
-            console.log('Database connected successfully.');
+            console.log('✓ Database authenticated successfully.');
             await seqialize.sync();
-            console.log('Database synchronized.');
+            console.log('✓ Database synchronized.');
             return;
         } catch (error) {
             if (attempt === maxRetries) {
                 throw error;
             }
             const waitTime = delay * attempt;
-            console.log(`Connection failed, retrying in ${waitTime}ms...`);
+            console.log(`Connection failed. Retrying in ${waitTime}ms...`);
             await new Promise(resolve => setTimeout(resolve, waitTime));
         }
     }
@@ -72,10 +72,11 @@ const startServer = async () => {
     try {
         await retryConnection();
         app.listen(PORT, () => {
-            console.log(`Server is running on http://localhost:${PORT}/api-docs`);
+            console.log(`✓ Server is running on port ${PORT}`);
+            console.log(`✓ API documentation: http://localhost:${PORT}/api-docs`);
         });
     } catch (error) {
-        console.error('Unable to connect to the database after retries:', error);
+        console.error('✗ Unable to connect to the database after retries:', error);
         process.exit(1);
     }
 };
